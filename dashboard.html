@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Cloud Cost Alert Bot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="brand"><span class="dot"></span>cost‑alert‑bot</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+    </div>
+  </nav>
+
+  <div class="dash-wrap">
+    <div class="dash-head">
+      <h1>Connected accounts</h1>
+    </div>
+
+    {% if accounts %}
+    <div class="accounts-grid">
+      {% for a in accounts %}
+      {% set pct = (a.last_cost_mtd / a.monthly_budget * 100) if (a.monthly_budget and a.last_cost_mtd) else 0 %}
+      {% set state = 'danger' if pct >= 100 else ('warn' if pct >= a.alert_threshold_pct else '') %}
+      <div class="gauge-card">
+        <div class="row">
+          <span class="label">{{ a.nickname or a.provider.upper() }} · {{ a.provider }}</span>
+        </div>
+        <div class="row">
+          <span class="value {{ state }}">${{ '%.0f'|format(a.last_cost_mtd or 0) }}</span>
+          <span class="label">of ${{ '%.0f'|format(a.monthly_budget) }} budget</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill" style="width: {{ [pct, 100]|min }}%"></div>
+          <div class="gauge-tick" style="left: {{ a.alert_threshold_pct }}%"></div>
+        </div>
+        <div class="gauge-meta">
+          <span>0</span>
+          <span>threshold: {{ a.alert_threshold_pct|int }}%</span>
+          <span>${{ '%.0f'|format(a.monthly_budget) }}</span>
+        </div>
+        {% if a.last_checked_at %}
+        <div class="gauge-alert" style="color: var(--text-dim); background: transparent; border-color: var(--panel-border);">
+          Last checked {{ a.last_checked_at.strftime('%Y-%m-%d %H:%M UTC') }}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <p>No accounts connected yet. Add one via the API — the free tier includes one AWS or Azure account.</p>
+      <code>curl -X POST https://your-app.onrender.com/api/accounts \<br>
+&nbsp;&nbsp;-H "X-API-Key: YOUR_API_KEY" -H "Content-Type: application/json" \<br>
+&nbsp;&nbsp;-d '{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"user_id": "...",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"provider": "aws",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"nickname": "Production AWS",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"credentials": {"aws_access_key_id": "...", "aws_secret_access_key": "..."},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"monthly_budget": 500,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"alert_threshold_pct": 80,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"slack_webhook_url": "https://hooks.slack.com/services/..."<br>
+&nbsp;&nbsp;}'</code>
+    </div>
+    {% endif %}
+  </div>
+
+</body>
+</html>
