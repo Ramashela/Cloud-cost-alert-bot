@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: cloud-cost-alert-bot
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    # workers=1 is intentional: the background scheduler runs inside the web
+    # process, and running >1 worker would trigger duplicate cost checks and
+    # duplicate alerts. See README "Scaling beyond one worker" if you need more.
+    startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120"
+    healthCheckPath: /health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: API_KEY
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        sync: false   # set manually — see README for how to generate it
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cloud-cost-alert-db
+          property: connectionString
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+databases:
+  - name: cloud-cost-alert-db
+    plan: free
+    region: oregon
