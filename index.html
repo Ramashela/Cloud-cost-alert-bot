@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Cost Alert Bot — know before the invoice does</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/" class="brand"><span class="dot"></span>cost‑alert‑bot</a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/dashboard" class="cta">Open dashboard</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">// aws + azure cost explorer, watched hourly</div>
+      <h1>Your cloud bill, <span class="accent">before</span> it surprises you.</h1>
+      <p>
+        84% of teams get blindsided by cloud spend. This bot checks your AWS and
+        Azure cost APIs on a schedule, compares it against the budget you set, and
+        pings your team's Slack or Discord the moment you cross a threshold —
+        not at the end of the month.
+      </p>
+      <div class="hero-ctas">
+        <a href="/dashboard" class="btn btn-primary">Connect an account</a>
+        <a href="#how" class="btn btn-ghost">See how it works</a>
+      </div>
+    </div>
+
+    <div class="gauge-card">
+      <div class="row">
+        <span class="label">production-aws · month to date</span>
+      </div>
+      <div class="row">
+        <span class="value warn">$4,120</span>
+        <span class="label">of $5,000 budget</span>
+      </div>
+      <div class="gauge-track">
+        <div class="gauge-fill" style="width: 82%"></div>
+        <div class="gauge-tick" style="left: 80%"></div>
+      </div>
+      <div class="gauge-meta">
+        <span>0</span>
+        <span>alert threshold: 80%</span>
+        <span>$5,000</span>
+      </div>
+      <div class="gauge-alert">
+        ⚠ 82% of budget — alert sent to #infra-alerts 6 minutes ago
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="section-head">
+      <h2>Three parts, running quietly in the background</h2>
+      <p>No dashboards to babysit — the bot comes to you.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="icon">01 · watch</div>
+        <h3>Reads your cost APIs directly</h3>
+        <p>Connects to AWS Cost Explorer or Azure Cost Management with read-only credentials. No agents, no exporters.</p>
+      </div>
+      <div class="card">
+        <div class="icon">02 · compare</div>
+        <h3>Checks against your budget</h3>
+        <p>Set a monthly budget and an alert threshold per account. The bot tracks month-to-date spend against it automatically.</p>
+      </div>
+      <div class="card">
+        <div class="icon">03 · notify</div>
+        <h3>Sends the alert where you already work</h3>
+        <p>Slack and Discord webhooks, delivered the moment a threshold is crossed — with a built-in cooldown so you're not spammed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="section-head">
+      <h2>Pricing</h2>
+      <p>Start free on one account. Upgrade when you need more coverage.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan">
+        <h3>Free</h3>
+        <div class="price">$0</div>
+        <ul>
+          <li>1 cloud account</li>
+          <li>Daily cost checks</li>
+          <li>Slack or Discord (pick one)</li>
+          <li>Budget threshold alerts</li>
+        </ul>
+        <a href="/dashboard" class="btn btn-ghost" style="width:100%;text-align:center;display:block;">Start free</a>
+      </div>
+      <div class="plan featured">
+        <span class="badge">Popular</span>
+        <h3>Pro</h3>
+        <div class="price">$9<span>/mo</span></div>
+        <ul>
+          <li>Up to 5 cloud accounts</li>
+          <li>Hourly cost checks</li>
+          <li>Slack and Discord</li>
+          <li>Anomaly detection</li>
+          <li>Daily digest summary</li>
+        </ul>
+        <a href="/dashboard" class="btn btn-primary" style="width:100%;text-align:center;display:block;">Go Pro</a>
+      </div>
+      <div class="plan">
+        <h3>Business</h3>
+        <div class="price">$29<span>/mo</span></div>
+        <ul>
+          <li>Up to 25 cloud accounts</li>
+          <li>15‑minute cost checks</li>
+          <li>Slack and Discord</li>
+          <li>Anomaly detection + digest</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="/dashboard" class="btn btn-ghost" style="width:100%;text-align:center;display:block;">Contact us</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>Cloud Cost Alert Bot — self‑hosted on Render. Your credentials, your infrastructure.</footer>
+
+</body>
+</html>
